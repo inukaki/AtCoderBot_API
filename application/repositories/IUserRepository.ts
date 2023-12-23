@@ -1,4 +1,4 @@
-import { User } from '../../domain/models/User'; 
+import { User } from '../../domain/models/User.ts'; 
 
 export abstract class IUserRepository {
     abstract findAll(): Promise<Array<User>>

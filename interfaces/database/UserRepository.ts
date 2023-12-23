@@ -1,6 +1,6 @@
-import { IUserRepository } from '../../application/repositories/IUserRepository'
-import { IDBConnection } from './IDBConnection'
-import { User } from '../../domain/models/User';
+import { IUserRepository } from '../../application/repositories/IUserRepository.ts'
+import { IDBConnection } from './IDBConnection.ts'
+import { User } from '../../domain/models/User.ts';
 
 
 export class UserRepository implements IUserRepository {
@@ -31,7 +31,7 @@ export class UserRepository implements IUserRepository {
     //遅いです O(N)
     async findByAtCoder(atcoderID: string): Promise<User> {
         let result = await this.connection.execute(
-            'select DISCORD_ID from users where ATCODER_ID = ?'
+            'select DISCORD_ID from users where ATCODER_ID = ?',
             [
                 atcoderID
             ]
@@ -42,7 +42,7 @@ export class UserRepository implements IUserRepository {
 
     async persist(user: User): Promise<User> {
         await this.connection.execute(
-            'insert into users (DISCORD_ID, ATCODER_ID) values (?, ?)',
+            'insert into USERS (DISCORD_ID, ATCODER_ID) values (?, ?)',
             [
                 user.discordID,
                 user.atcoderID

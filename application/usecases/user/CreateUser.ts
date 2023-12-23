@@ -1,5 +1,5 @@
-import { User } from "../../../domain/models/User"
-import { IUserRepository } from "../../repositories/IUserRepository"
+import { User } from "../../../domain/models/User.ts"
+import { IUserRepository } from "../../repositories/IUserRepository.ts"
 
 export class CreateUser {
     private userRepository: IUserRepository
