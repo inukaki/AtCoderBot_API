@@ -17,6 +17,5 @@ export class UserController {
         const useCase = new CreateUser(this.userRepository)
         let result = await useCase.execute(discordID, atcoderID)
         return this.userSerializer.serialize(result)
-        
     }
 }
