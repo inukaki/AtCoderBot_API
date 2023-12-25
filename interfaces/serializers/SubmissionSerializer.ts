@@ -1,5 +1,3 @@
-//Userというモデルから、APIに出力する形に変換する
-
 import { Submission } from "../../domain/models/Submission.ts"
 
 const _serializeSingleSubmission = (submission: Submission) => {

@@ -1,5 +1,6 @@
-import { CreateMultiSubmission } from "../../application/usecases/submission/CreateMultiSubmissions.ts"
+import { CreateMultiSubmission } from "../../application/usecases/submission/CreateMultiSubmission.ts"
 import { CreateSubmission } from "../../application/usecases/submission/CreateSubmission.ts"
+import { GetUserSubmissionsByTime } from "../../application/usecases/submission/GetUserSubmissionsByTime.ts"
 import { IDBConnection } from "../database/IDBConnection.ts"
 import { SubmissionRepository } from "../database/SubmissionRepository.ts"
 import { SubmissionSerializer } from "../serializers/SubmissionSerializer.ts"
@@ -31,6 +32,15 @@ export class SubmissionController {
 
         let result = await useCase.execute(list)
         
+        return this.submissionSerializer.serialize(result)
+    }
+
+    async getUserSubmissionsByTime(req: any, res: any) {
+        const useCase = new GetUserSubmissionsByTime(this.submissionRepository)
+        const {atcoderID, from} = req.body
+
+        let result = await useCase.execute(atcoderID, from)
+
         return this.submissionSerializer.serialize(result)
     }
 }

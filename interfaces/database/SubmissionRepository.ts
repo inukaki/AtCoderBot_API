@@ -32,7 +32,7 @@ export class SubmissionRepository extends ISubmissionRepository {
 
     async persist(submission: Submission): Promise<Submission> {
         let result = await this.connection.execute(
-            `insert into submissions (id, epoch_second, problem_id, contest_id, user_id, _language, _point, _length, _result, execution_time) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            `insert ignore into submissions (id, epoch_second, problem_id, contest_id, user_id, _language, _point, _length, _result, execution_time) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 submission.id,
                 submission.epochSecond,

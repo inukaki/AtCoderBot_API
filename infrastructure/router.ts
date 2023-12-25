@@ -8,4 +8,9 @@ router.post('/users/create', async (req: express.Request, res: express.Response)
   res.send(result)
 })
 
+router.get('/submissions/from', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.submissionController.getUserSubmissionsByTime(req, res)
+  res.send(result)
+})
+
 export default router
