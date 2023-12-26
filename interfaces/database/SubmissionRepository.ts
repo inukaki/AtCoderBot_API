@@ -51,7 +51,7 @@ export class SubmissionRepository extends ISubmissionRepository {
     }
 
     async persistAll(submissions: Submission[]): Promise<Submission[]> {
-        var query = `insert into submissions (id, epoch_second, problem_id, contest_id, user_id, _language, _point, _length, _result, execution_time) values `
+        var query = `insert ignore into submissions (id, epoch_second, problem_id, contest_id, user_id, _language, _point, _length, _result, execution_time) values `
         const list: any[] = []
 
         for(var i = 0; i < submissions.length; i++) {

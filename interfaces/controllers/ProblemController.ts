@@ -1,19 +1,16 @@
-import { CreateMultiProblem } from "../../application/usecases/problem/CreateMultiProblem.ts"
-import { IDBConnection } from "../database/IDBConnection.ts"
-import { ProblemRepository } from "../database/ProblemRepository.ts"
+import { ProblemConverter } from "../../application/converter/ProblemConverter.ts"
 import { ProblemSerializer } from "../serializers/ProblemSerializer.ts"
 
 export class ProblemController {
     private problemSerializer: ProblemSerializer
-    private problemRepository: ProblemRepository
+    private problemConverter: ProblemConverter
 
-    constructor(dbConnection: IDBConnection) {
+    constructor(problemConverter: ProblemConverter) {
         this.problemSerializer = new ProblemSerializer()
-        this.problemRepository = new ProblemRepository(dbConnection)
+        this.problemConverter = problemConverter
     }
 
     async createMultiProblem(req: any, res: any) {
-        const useCase = new CreateMultiProblem(this.problemRepository)
         const list: any[] = []
         
         for(const problem of req.body) {
@@ -21,7 +18,7 @@ export class ProblemController {
             list.push(id, contest_id, problem_index, name, title, difficulty)
         }
 
-        let result = await useCase.execute(list)
+        let result = await this.problemConverter.createMultiProblem(list)
         
         return this.problemSerializer.serialize(result)
     }

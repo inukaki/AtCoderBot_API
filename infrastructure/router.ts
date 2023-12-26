@@ -13,4 +13,9 @@ router.get('/submissions/from', async (req: express.Request, res: express.Respon
   res.send(result)
 })
 
+router.get('/result/server', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.resultController.getUserResultByTimeAndServer(req, res)
+  res.send(result)
+})
+
 export default router

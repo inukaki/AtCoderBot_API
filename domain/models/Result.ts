@@ -8,4 +8,12 @@ export class Result {
         this._atcoderID = atcoderID
         this._solved = solved
     }
+
+    get atcoderID() {
+        return this._atcoderID
+    }
+
+    get solved() {
+        return this._solved
+    }
 }

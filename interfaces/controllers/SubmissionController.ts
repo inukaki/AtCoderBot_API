@@ -1,28 +1,22 @@
-import { CreateMultiSubmission } from "../../application/usecases/submission/CreateMultiSubmission.ts"
-import { CreateSubmission } from "../../application/usecases/submission/CreateSubmission.ts"
-import { GetUserSubmissionsByTime } from "../../application/usecases/submission/GetUserSubmissionsByTime.ts"
-import { IDBConnection } from "../database/IDBConnection.ts"
-import { SubmissionRepository } from "../database/SubmissionRepository.ts"
+import { SubmissionConverter } from "../../application/converter/SubmissionConverter.ts"
 import { SubmissionSerializer } from "../serializers/SubmissionSerializer.ts"
 
 export class SubmissionController {
     private submissionSerializer: SubmissionSerializer
-    private submissionRepository: SubmissionRepository
+    private submissionConverter: SubmissionConverter
 
-    constructor(dbConnection: IDBConnection) {
-        this.submissionSerializer = new SubmissionSerializer()
-        this.submissionRepository = new SubmissionRepository(dbConnection)
+    constructor(submissionConverter: SubmissionConverter, submissionSerializer: SubmissionSerializer) {
+        this.submissionSerializer = submissionSerializer
+        this.submissionConverter = submissionConverter
     }
 
     async createSubmission(req: any, res: any) {
         const {id, epoch_second, problem_id, contest_id, user_id, language, point, length, result, execution_time} = req.body
-        const useCase = new CreateSubmission(this.submissionRepository)
-        let ress = await useCase.execute(id, epoch_second, problem_id, contest_id, user_id, language, point, length, result, execution_time)
+        const ress = this.submissionConverter.createSubmission(id, epoch_second, problem_id, contest_id, user_id, language, point, length, result, execution_time)
         return this.submissionSerializer.serialize(ress)
     }
 
     async createMultiSubmission(req: any, res: any) {
-        const useCase = new CreateMultiSubmission(this.submissionRepository)
         const list: any[] = []
         
         for(const submission of req.body) {
@@ -30,16 +24,15 @@ export class SubmissionController {
             list.push(id, epoch_second, problem_id, contest_id, user_id, language, point, length, result, execution_time)
         }
 
-        let result = await useCase.execute(list)
+        let result = await this.submissionConverter.createMultiSubmission(list)
         
         return this.submissionSerializer.serialize(result)
     }
 
     async getUserSubmissionsByTime(req: any, res: any) {
-        const useCase = new GetUserSubmissionsByTime(this.submissionRepository)
         const {atcoderID, from} = req.body
 
-        let result = await useCase.execute(atcoderID, from)
+        let result = await this.submissionConverter.getUserSubmissionsByTime(atcoderID, from)
 
         return this.submissionSerializer.serialize(result)
     }

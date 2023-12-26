@@ -38,7 +38,7 @@ export class ProblemRepository extends IProblemRepository {
                 problem.name,
                 problem.title,
                 problem.difficulty,
-                )
+             )
         }
         
         let result = await this.connection.execute(

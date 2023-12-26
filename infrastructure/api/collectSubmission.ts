@@ -5,7 +5,7 @@ async function collectSubmission(from: number, delay: number) {
     var last = from;
     var lastFinished = true
 
-    const id = setInterval(async () => {
+    const insertSubmissions = async () => {
         if(!lastFinished) return
         lastFinished = false
 
@@ -16,12 +16,27 @@ async function collectSubmission(from: number, delay: number) {
             return
         }
 
-        last = submissions[submissions.length - 1].epoch_second + 1
+        last = submissions[submissions.length - 1].epoch_second
 
-        server.instance.submissionController.createMultiSubmission({body: submissions},200)
+        while(submissions.length != 0){
+            const list: any[] = []
+
+            for(let i = 0; i < 1000; i++) {
+                if(submissions.length == 0) break
+                let submission = submissions.pop()
+                list.push([submission.id, submission.epoch_second, submission.problem_id, submission.contest_id, submission.user_id, submission.language, submission.point, submission.length, submission.result, submission.execution_time])
+            }
+
+            await server.instance.submissionConverter.createMultiSubmission(list)
+            console.log("inserted " + (list.length) + " submissions")
+        }
 
         lastFinished = true
-    }, delay)
+    } 
+
+    insertSubmissions()
+
+    const id = setInterval(insertSubmissions, delay)
 }
 
-export default collectSubmission;
+export default collectSubmission

@@ -8,13 +8,10 @@ export class CreateMultiProblem {
         this.problemRepository = problemRepository
     }
 
-    execute(args: any[]) {
-        const problems: Problem[] = []
-
-        for(var i = 0; i < args.length; i += 6) {
-            problems.push(new Problem(args[i],args[i+1],args[i+2],args[i+3],args[i+4],args[i+5]))
-        }
-
-        return this.problemRepository.persistAll(problems)
+    execute(problems: any[]) {
+        return this.problemRepository.persistAll(problems.map((x) => {
+            return new Problem(x[0], x[1], x[2], x[3], x[4], x[5])
+            
+        }))
     } 
 }

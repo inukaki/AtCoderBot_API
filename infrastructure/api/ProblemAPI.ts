@@ -5,7 +5,7 @@ const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
 /**
  * 問題一覧をjsonで取得
  */
-async function getProblems() {
+export async function getProblems() {
     return new Promise<any[]>(async (resolve,reject) => {
         await axios.get('https://kenkoooo.com/atcoder/resources/problems.json').then(async (res1: { data: any }) => {
             const problems = res1.data
@@ -17,9 +17,11 @@ async function getProblems() {
 
                 for(let i = 0; i < problems.length; i++) {
                     const problemID = problems[i].id
-                    const difficulty = (problemID in difficulties) ? difficulties[problemID].difficulty : undefined
+                    const diff: number = (problemID in difficulties) ? difficulties[problemID].difficulty : undefined
 
-                    problems[i].difficulty = difficulty
+                    difficulty.set(problemID, diff)
+
+                    problems[i].difficulty = diff
                 }
                 resolve(problems)
             })
@@ -27,6 +29,5 @@ async function getProblems() {
     })
 }
 
-export {
-    getProblems
-}
+export const difficulty = new Map<string, number>
+

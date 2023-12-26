@@ -28,23 +28,19 @@ async function getSubmissions(from: number)  {
 
             if(length < 1000) finished = true
 
-            var foundWJ = false
-
             for(const submission of data) {
-                if(!submission.result.includes("WJ")) continue
-                last = Math.min(last, submission.epoch_second)
-                foundWJ = true
-                finished = false;
+                if(!submission.result.includes("WJ")) {
+                    submissions.push(submission)
+                    continue
+                }
+                finished = true
                 console.log("found WJ: " + submission.epoch_second)
+                break
             }
     
-            console.log(`size: ${length}`)
+            console.log(`size: ${submissions.length}`)
             console.log(`last time: ${last}`)
             console.log()
-
-            if(foundWJ) return
-    
-            submissions.push(...data)
     
             }).catch((err: any) => {
                 finished = true;
