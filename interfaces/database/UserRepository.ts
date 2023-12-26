@@ -2,11 +2,11 @@ import { IUserRepository } from '../../application/repositories/IUserRepository.
 import { IDBConnection } from './IDBConnection.ts'
 import { User } from '../../domain/models/User.ts';
 
-
-export class UserRepository implements IUserRepository {
+export class UserRepository extends IUserRepository {
     private connection: any
 
     constructor(connection: IDBConnection) {
+        super();
         this.connection = connection;
     }
 
@@ -16,10 +16,15 @@ export class UserRepository implements IUserRepository {
     }
 
     //TODO 存在しない場合
-    //O(logN)
+    /**
+     * Discord ID から User を探す
+     * 多分 O(logN)
+     * @param discordID 
+     * @returns Promise<User>
+     */
     async findByDiscord(discordID: number): Promise<User> {
         let result = await this.connection.execute(
-            'select ATCODER_ID from users where DISCORD_ID = ?',
+            'select atcoder_id from users where discord_id = ?',
             [
                 discordID
             ]
@@ -28,10 +33,15 @@ export class UserRepository implements IUserRepository {
         return new User(discordID, result[0].ATCODER_ID)
     }
 
-    //遅いです O(N)
+    /**
+     * AtCoder ID から User を探す
+     * 多分 O(N)
+     * @param atcoderID 
+     * @returns Promise<User>
+     */
     async findByAtCoder(atcoderID: string): Promise<User> {
         let result = await this.connection.execute(
-            'select DISCORD_ID from users where ATCODER_ID = ?',
+            'select discord_id from users where atcoder_id = ?',
             [
                 atcoderID
             ]
@@ -42,7 +52,7 @@ export class UserRepository implements IUserRepository {
 
     async persist(user: User): Promise<User> {
         await this.connection.execute(
-            'insert into USERS (DISCORD_ID, ATCODER_ID) values (?, ?)',
+            'insert into users (discord_id, atcoder_id) values (?, ?)',
             [
                 user.discordID,
                 user.atcoderID

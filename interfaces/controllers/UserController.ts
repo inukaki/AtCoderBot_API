@@ -1,22 +1,18 @@
 import { UserSerializer } from '../serializers/UserSerializer.ts'
-import { UserRepository } from '../database/UserRepository.ts'
-import { IDBConnection } from '../database/IDBConnection.ts'
-import { CreateUser } from '../../application/usecases/user/CreateUser.ts'
+import { UserConverter } from '../../application/converter/UserConverter.ts'
 
 export class UserController {
     private userSerializer: UserSerializer
-    private userRepository: UserRepository
+    private userConverter: UserConverter
 
-    constructor(dbConnection: IDBConnection) {
-        this.userSerializer = new UserSerializer()
-        this.userRepository = new UserRepository(dbConnection)
+    constructor(userConverter: UserConverter, userSerializer: UserSerializer) {
+        this.userSerializer = userSerializer
+        this.userConverter = userConverter
     }
 
     async createUser(req: any, res: any) {
         const {discordID, atcoderID} = req.body
-        const useCase = new CreateUser(this.userRepository)
-        let result = await useCase.execute(discordID, atcoderID)
+        let result = await this.userConverter.createUser(discordID, atcoderID)
         return this.userSerializer.serialize(result)
-        
     }
 }

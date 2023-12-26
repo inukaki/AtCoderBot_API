@@ -11,12 +11,12 @@ export class MysqlConnection extends IDBConnection {
     dotenv.config()
     this.pool = mysql.createPool({
       connectionLimit: 5,
-      host: "db",
-      port: 3306,
-      user: "user",
-      password: "password",
-      database: "atcoder",
-      timezone: 'utc'
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      timezone: process.env.DB_TIMEZONE
     })
 
     this.pool.getConnection((error: any, connection: any) => {

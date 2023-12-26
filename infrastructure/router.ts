@@ -1,13 +1,20 @@
 import express from 'express';
-import { UserController } from '../interfaces/controllers/UserController.ts'
-import { MysqlConnection } from './MysqlConnection.ts'
+import { server } from './server.ts'; 
 
-const mysqlConnection = new MysqlConnection()
-const userController = new UserController(mysqlConnection)
 let router = express.Router()
 
 router.post('/users/create', async (req: express.Request, res: express.Response) => {
-  let result = await userController.createUser(req, res)
+  let result = await server.instance.userController.createUser(req, res)
+  res.send(result)
+})
+
+router.get('/submissions/from', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.submissionController.getUserSubmissionsByTime(req, res)
+  res.send(result)
+})
+
+router.get('/result/server', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.resultController.getUserResultByTimeAndServer(req, res)
   res.send(result)
 })
 

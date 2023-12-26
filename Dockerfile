@@ -12,6 +12,7 @@ RUN npm install typescript
 RUN npm install -g ts-node
 RUN npm install -g express
 RUN npm install -g dotenv
+#--save-dev
 RUN npm i --save-dev @types/express
 RUN npm i --save-dev @types/mysql
 RUN npm i --save-dev @types/dotenv
