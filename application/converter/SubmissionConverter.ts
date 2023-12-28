@@ -1,6 +1,7 @@
 import { ISubmissionRepository } from "../repositories/ISubmissionRepository.ts";
 import { CreateMultiSubmission } from "../usecases/submission/CreateMultiSubmission.ts";
 import { CreateSubmission } from "../usecases/submission/CreateSubmission.ts";
+import { GetLatestSubmission } from "../usecases/submission/GetLatestSubmission.ts";
 import { GetUserSubmissionsByTime } from "../usecases/submission/GetUserSubmissionsByTime.ts";
 
 export class SubmissionConverter {
@@ -25,6 +26,12 @@ export class SubmissionConverter {
     async getUserSubmissionsByTime(atcoderID: string, from: number) {
         let useCase = new GetUserSubmissionsByTime(this.submissionRepository)
         let res = await useCase.execute(atcoderID, from)
+        return res
+    }
+
+    async getLatestSubmission() {
+        let useCase = new GetLatestSubmission(this.submissionRepository)
+        let res = await useCase.execute()
         return res
     }
 }

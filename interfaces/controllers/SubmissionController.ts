@@ -36,4 +36,10 @@ export class SubmissionController {
 
         return this.submissionSerializer.serialize(result)
     }
+
+    async getLatestSubmission(req: any, res: any) {
+        let result = await this.submissionConverter.getLatestSubmission()
+
+        return this.submissionSerializer.serialize(result)
+    }
 }

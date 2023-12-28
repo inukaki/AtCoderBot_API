@@ -2,8 +2,13 @@ import { getSubmissions } from './SubmissionAPI.ts';
 import { server } from '../server.ts';
 
 async function collectSubmission(from: number, delay: number) {
-    var last = from;
-    var lastFinished = true
+    let last = from;
+    let lastFinished = true
+
+    let latest = (await server.instance.submissionConverter.getLatestSubmission()).epochSecond
+    if(latest) {
+        last = Math.max(last, latest)
+    }
 
     const insertSubmissions = async () => {
         if(!lastFinished) return
@@ -28,7 +33,6 @@ async function collectSubmission(from: number, delay: number) {
             }
 
             await server.instance.submissionConverter.createMultiSubmission(list)
-            console.log("inserted " + (list.length) + " submissions")
         }
 
         lastFinished = true

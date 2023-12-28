@@ -10,12 +10,25 @@ export class SubmissionRepository extends ISubmissionRepository {
         this.connection = connection;
     }
 
+    //json -> model
+    convert(x: any) {
+        return new Submission(x.id, x.epoch_second, x.problem_id, x.contest_id, x.user_id, x._language, x._point, x._length, x._result, x.execution_time)
+    }
+
     async findAll(): Promise<Submission[]> {
         throw new Error("Method not implemented.");
     }
 
     async findById(atcoderID: string): Promise<Submission[]> {
         throw new Error("Method not implemented.");
+    }
+
+    async findLatest(): Promise<Submission> {
+        let result = await this.connection.execute(
+            'select * from submissions where id = (select max(id) from submissions)'
+        )
+
+        return this.convert(result[0])
     }
 
     async findByIdAndTime(atcoderID: string, from: number): Promise<Submission[]> {
@@ -27,7 +40,7 @@ export class SubmissionRepository extends ISubmissionRepository {
             ]
         )
         
-        return result.map((x: any) => new Submission(x.id, x.epoch_second, x.problem_id, x.contest_id, x.user_id, x._language, x._point, x._length, x._result, x.execution_time))   
+        return result.map(this.convert)   
     }
 
     async persist(submission: Submission): Promise<Submission> {
