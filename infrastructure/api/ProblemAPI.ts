@@ -17,7 +17,9 @@ export async function getProblems() {
 
                 for(let i = 0; i < problems.length; i++) {
                     const problemID = problems[i].id
-                    const diff: number = (problemID in difficulties) ? difficulties[problemID].difficulty : undefined
+                    let diff: number = (problemID in difficulties) ? difficulties[problemID].difficulty : undefined
+
+                    if(diff) diff = Math.round(diff >= 400 ? diff : 400 / Math.exp(1.0 - diff / 400));
 
                     difficulty.set(problemID, diff)
 

@@ -43,6 +43,7 @@ async function getSubmissions(from: number)  {
             console.log()
     
             }).catch((err: any) => {
+                console.log(err)
                 finished = true;
             })
     
