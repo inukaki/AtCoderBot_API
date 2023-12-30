@@ -52,7 +52,7 @@ export class UserRepository extends IUserRepository {
 
     async persist(user: User): Promise<User> {
         await this.connection.execute(
-            'insert into users (discord_id, atcoder_id) values (?, ?)',
+            'insert into users (discord_id, atcoder_id) values (?, ?) on duplicate key update atcoder_id = values(atcoder_id)',
             [
                 user.discordID,
                 user.atcoderID
