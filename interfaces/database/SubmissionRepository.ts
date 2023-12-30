@@ -23,10 +23,12 @@ export class SubmissionRepository extends ISubmissionRepository {
         throw new Error("Method not implemented.");
     }
 
-    async findLatest(): Promise<Submission> {
+    async findLatest(): Promise<any> {
         let result = await this.connection.execute(
             'select * from submissions where id = (select max(id) from submissions)'
         )
+
+        if(result.length == 0) return undefined
 
         return this.convert(result[0])
     }

@@ -18,4 +18,6 @@ router.get('/result/server', async (req: express.Request, res: express.Response)
   res.send(result)
 })
 
+
+
 export default router

@@ -5,9 +5,10 @@ async function collectSubmission(from: number, delay: number) {
     let last = from;
     let lastFinished = true
 
-    let latest = (await server.instance.submissionConverter.getLatestSubmission()).epochSecond
+    let latest = (await server.instance.submissionConverter.getLatestSubmission())
+
     if(latest) {
-        last = Math.max(last, latest)
+        last = Math.max(last, latest.epochSecond)
     }
 
     const insertSubmissions = async () => {
