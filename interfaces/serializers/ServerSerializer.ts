@@ -5,8 +5,7 @@ const _serializeSingleServer = (server: Server) => {
     return {
         serverID: server.serverID,
         members: server.members,
-        daily: server.daily,
-        daily_id: server.dailyID.map((x) => Color[x])
+        daily_id: server.dailyID
     }
 }
 

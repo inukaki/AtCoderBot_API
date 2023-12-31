@@ -28,7 +28,6 @@ export class ResultController {
         let result = await this.resultConverter.getUserResultByTimeAndServer(serverID, from)
         let serialized = this.resultSerializer.serialize(result)
 
-
         return {serverID: serverID,
                 from: from,
                 result: serialized}

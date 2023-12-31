@@ -8,7 +8,7 @@ async function collectProblem(delay: number) {
         const list: any[] = []
 
         for(let i = 0; i < problems.length; i++) {
-            list.push([problems[i].id, problems[i].contest_id, problems[i].problem_index, problems[i].name, problems[i].title, problems[i].difficulty])
+            list.push([problems[i].id, problems[i].contest_id, problems[i].problem_index, problems[i].name, problems[i].title, problems[i].point, problems[i].difficulty])
         }
 
         server.instance.problemConverter.createMultiProblem(list)

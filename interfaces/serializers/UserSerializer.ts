@@ -5,7 +5,9 @@ import { User } from "../../domain/models/User.ts"
 const _serializeSingleUser = (user: User) => {
     return {
         discordID: user.discordID,
-        atcoderID: user.atcoderID
+        atcoderID: user.atcoderID,
+        rating: user.rating,
+        solved: user.solved
     }
 }
 

@@ -7,7 +7,7 @@ const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
  */
 export async function getProblems() {
     return new Promise<any[]>(async (resolve,reject) => {
-        await axios.get('https://kenkoooo.com/atcoder/resources/problems.json').then(async (res1: { data: any }) => {
+        await axios.get('https://kenkoooo.com/atcoder/resources/merged-problems.json').then(async (res1: { data: any }) => {
             const problems = res1.data
 
             await sleep(5000)

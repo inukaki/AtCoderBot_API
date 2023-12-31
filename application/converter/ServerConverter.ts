@@ -8,7 +8,7 @@ export class ServerConverter {
         this.serverRepository = serverRepository
     }
 
-    async getServer(serverID: number) {
+    async getServer(serverID: string) {
         let useCase = new GetServer(this.serverRepository)
         let result = await useCase.execute(serverID)
         return result

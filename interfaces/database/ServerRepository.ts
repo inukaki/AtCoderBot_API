@@ -15,7 +15,7 @@ export class ServerRepository extends IServerRepository {
         throw new Error("Method not implemented.");
     }
 
-    async findByID(serverID: number): Promise<Server> {
+    async findByID(serverID: string): Promise<Server> {
         let result = await this.connection.execute(
             `select * from servers where server_id = ?`,
             [
@@ -23,7 +23,7 @@ export class ServerRepository extends IServerRepository {
             ]
         )
         
-        return new Server(serverID, JSON.parse(result[0].members), result[0].daily, JSON.parse(result[0].daily_id).map((x: string) => {return valueOfColor(x)}))
+        return new Server(serverID, JSON.parse(result[0].members), result[0].dailyID)
     }
 
     async persist(server: Server): Promise<Server> {

@@ -24,7 +24,7 @@ export class ResultConverter {
         return new Result(atcoderID, count)
     }
 
-    async getUserResultByTimeAndServer(serverID: number, from: number) {
+    async getUserResultByTimeAndServer(serverID: string, from: number) {
         let s = await server.instance.serverConverter.getServer(serverID)
 
         let result: Result[] = []

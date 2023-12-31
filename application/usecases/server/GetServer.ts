@@ -7,7 +7,7 @@ export class GetServer {
         this.serverRepository = serverRepository
     }
 
-    execute(serverID: number) {
+    execute(serverID: string) {
         return this.serverRepository.findByID(serverID)
     }
 }

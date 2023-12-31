@@ -1,7 +1,6 @@
-import { User } from "../../../domain/models/User.ts"
 import { IUserRepository } from "../../repositories/IUserRepository.ts"
 
-export class CreateUser {
+export class LinkUser {
     private userRepository: IUserRepository
 
     constructor(userRepository: IUserRepository) {
@@ -9,7 +8,6 @@ export class CreateUser {
     }
 
     execute(discordID: string, atcoderID: string) {
-        let user = new User(discordID, atcoderID, 0, [])
-        return this.userRepository.persist(user)
+        return this.userRepository.link(discordID, atcoderID)
     } 
 }

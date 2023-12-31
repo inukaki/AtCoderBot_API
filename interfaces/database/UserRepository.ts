@@ -10,60 +10,91 @@ export class UserRepository extends IUserRepository {
         this.connection = connection;
     }
 
-    findAll(): Promise<User[]> {
-        //TODO いつかかきます
-        return Promise.resolve([]);
+    async findAll(): Promise<User[]> {
+        let result = await this.connection.execute(
+            'select * from users'
+        )
+        return result.map((x: any) => {return new User(x.discord_id, x.atcoder_id, x.rating, JSON.parse(x.solved))})
     }
 
-    //TODO 存在しない場合
+    //TODO 存在しない場合 複数ある場合
     /**
      * Discord ID から User を探す
-     * 多分 O(logN)
      * @param discordID 
      * @returns Promise<User>
      */
-    async findByDiscord(discordID: number): Promise<User> {
+    async findByDiscord(discordID: string): Promise<User> {
         let result = await this.connection.execute(
-            'select atcoder_id from users where discord_id = ?',
+            'select * from users where discord_id = ?',
             [
                 discordID
             ]
         )
         
-        return new User(discordID, result[0].ATCODER_ID)
+        return new User(discordID, result[0].atcoder_id, result[0].rating, JSON.parse(result[0].solved))
     }
 
     /**
      * AtCoder ID から User を探す
-     * 多分 O(N)
      * @param atcoderID 
      * @returns Promise<User>
      */
     async findByAtCoder(atcoderID: string): Promise<User> {
         let result = await this.connection.execute(
-            'select discord_id from users where atcoder_id = ?',
+            'select * from users where atcoder_id = ?',
             [
                 atcoderID
             ]
         )
 
-        return new User(result[0].DISCORD_ID, atcoderID)
+        return new User(result[0].discord_id, atcoderID, result[0].rating, JSON.parse(result[0].solved))
     }
 
     async persist(user: User): Promise<User> {
         await this.connection.execute(
-            'insert into users (discord_id, atcoder_id) values (?, ?) on duplicate key update atcoder_id = values(atcoder_id)',
+            'insert into users (atcoder_id, discord_id, rating, solved) values (?, ?, ?, ?)',
             [
+                user.atcoderID,
                 user.discordID,
-                user.atcoderID
+                user.rating,
+                JSON.stringify(user.solved)
             ]
         )
         return user
     }
 
-    //TODO いつかかく
-    delete(user: User): Promise<User> {
-        throw new Error('Method not implemented.');
+    async merge(user: User) {
+        await this.connection.execute(
+            'insert into users (atcoder_id, discord_id, rating, solved) values (?, ?, ?, ?) on duplicate key update discord_id = values(discord_id), rating = values(rating), solved = values(solved)',
+            [
+                user.atcoderID,
+                user.discordID,
+                user.rating,
+                user.solved
+            ]
+        )
+        return user
+    }
+
+    async link(discordID: string, atcoderID: string): Promise<void> {
+        await this.connection.execute(
+            'insert into users (atcoder_id, discord_id, rating, solved) values (?, ?, ?, ?) on duplicate key update discord_id = values(discord_id)',
+            [
+                atcoderID,
+                discordID,
+                0,
+                JSON.stringify([])
+            ]
+        )
+    }
+
+    async unlink(discordID: string): Promise<void> {
+        await this.connection.execute(
+            'update users set discord_id = null where discord_id = ?',
+            [
+                discordID,
+            ]
+        )
     }
 
 }
