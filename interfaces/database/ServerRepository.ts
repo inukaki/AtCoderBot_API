@@ -1,7 +1,6 @@
 import { IServerRepository } from "../../application/repositories/IServerRepository.ts";
 import { IDBConnection } from "./IDBConnection.ts";
 import { Server } from "../../domain/models/Server.ts";
-import { Color, valueOfColor } from "../../domain/models/Difficulty.ts";
 
 export class ServerRepository extends IServerRepository {
     private connection: any
@@ -27,11 +26,30 @@ export class ServerRepository extends IServerRepository {
     }
 
     async persist(server: Server): Promise<Server> {
-        throw new Error("Method not implemented.");
+        await this.connection.execute(
+            `insert ignore into servers (server_id, members, daily_id) values (?, ?, ?)`,
+            [
+                server.serverID,
+                JSON.stringify(server.members),
+                server.dailyID
+            ]
+        )
+        
+        return server
     }
 
     async delete(server: Server): Promise<Server> {
         throw new Error("Method not implemented.");
+    }
+
+    async addMember(serverID: string, discordID: string): Promise<void> {
+        let result = await this.connection.execute(
+            "update servers set members=JSON_ARRAY_APPEND(members, '$', ?) where server_id = ?",
+            [
+                discordID,
+                serverID
+            ]
+        )
     }
 
 }

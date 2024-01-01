@@ -3,6 +3,8 @@ import { server } from './server.ts';
 
 let router = express.Router()
 
+//Users
+
 router.get('/users', async (req: express.Request, res: express.Response) => {
   let result = await server.instance.userController.listUsers(req,res)
   res.send(result)
@@ -20,6 +22,23 @@ router.put('/users', async (req: express.Request, res: express.Response) => {
 
 router.delete('/users/:discordID', async (req: express.Request, res: express.Response) => {
   let result = await server.instance.userController.unlinkUser(req,res)
+  res.send(result)
+})
+
+//Servers
+
+router.post('/servers/init', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.serverController.createServer(req,res)
+  res.send(result)
+})
+
+router.post('/servers/members', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.serverController.addMember(req,res)
+  res.send(result)
+})
+
+router.get('/servers/:serverID', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.serverController.getServer(req,res)
   res.send(result)
 })
 

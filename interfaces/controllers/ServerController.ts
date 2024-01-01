@@ -12,8 +12,19 @@ export class ServerController {
     }
 
     async getServer(req: any, res: any) {
-        const {serverID} = req.body
+        const serverID = req.params.serverID
         let result = await this.serverConverter.getServer(serverID)
         return this.serverSerializer.serialize(result)
+    }
+
+    async createServer(req: any, res: any) {
+        const {serverID} = req.body
+        let result = await this.serverConverter.createServer(serverID)
+        return this.serverSerializer.serialize(result)
+    }
+
+    async addMember(req: any, res: any) {
+        const {serverID,discordID} = req.body
+        let result = await this.serverConverter.addMember(serverID, discordID)
     }
 }
