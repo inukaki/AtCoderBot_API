@@ -41,6 +41,10 @@ router.get('/servers/:serverID', async (req: express.Request, res: express.Respo
 })
 
 //Daily
+router.get('/daily', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.dailyController.getDaily(req,res)
+  res.send(result)
+})
 
 //Results
 router.get('/results/server/:serverID', async (req: express.Request, res: express.Response) => {
@@ -63,6 +67,7 @@ router.get('/contests', async (req: express.Request, res: express.Response) => {
   let result = await server.instance.contestController.getContestByTime(req,res)
   res.send(result)
 })
+
 
 router.get('/submissions/from', async (req: express.Request, res: express.Response) => {
   let result = await server.instance.submissionController.getUserSubmissionsByTime(req, res)

@@ -1,4 +1,3 @@
-import { Color } from "../../domain/models/Difficulty.ts"
 import { Server } from "../../domain/models/Server.ts"
 
 const _serializeSingleServer = (server: Server) => {

@@ -1,5 +1,5 @@
 import { ContestResult } from "../../domain/models/ContestResult.ts";
-import { Color, getColor } from "../../domain/models/Difficulty.ts";
+import { getColor } from "../../domain/models/Difficulty.ts";
 import { Result } from "../../domain/models/Result.ts";
 import { Submission } from "../../domain/models/Submission.ts";
 import { server } from "../../infrastructure/server.ts";
@@ -8,7 +8,7 @@ export class ResultConverter {
     async getUserResultByTime(atcoderID: string, from: number, to: number) {
         let submissions = await server.instance.submissionConverter.getUserSubmissionsByTime(atcoderID, from, to)
 
-        let count = new Map<Color, number>()
+        let count = new Map<string, number>()
 
         for(const submission of submissions) {
             if(submission.result != "AC") continue

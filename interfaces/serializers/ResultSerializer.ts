@@ -1,11 +1,10 @@
-import { Color } from "../../domain/models/Difficulty.ts";
 import { Result } from "../../domain/models/Result.ts";
 
 const _serializeSingleResult = (result: Result) => {
     let solved: any = {}
 
     for(const [color, count] of result.solved) {
-        solved[Color[color]] = count
+        solved[color] = count
     }
 
     return {

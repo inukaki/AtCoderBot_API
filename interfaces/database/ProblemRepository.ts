@@ -10,8 +10,16 @@ export class ProblemRepository extends IProblemRepository {
         this.connection = connection;
     }
 
+    convert(problem: any) {
+        return new Problem(problem.id, problem.contest_id, problem.problem_index, problem.name, problem.title, problem._point, problem.difficulty)
+    }
+
     async findAll(): Promise<Problem[]> {
-        throw new Error("Method not implemented.");
+        let result = await this.connection.execute(
+            'select * from problems'
+        )
+
+        return result.map(this.convert)
     }
 
     async findByID(problemID: string): Promise<Problem> {
@@ -19,7 +27,7 @@ export class ProblemRepository extends IProblemRepository {
             'select * from problems where id = ?',
             problemID
         )
-        return new Problem(result[0].id, result[0].contest_id, result[0].problem_index, result[0].name, result[0].title, result[0]._point, result[0].difficulty)
+        return this.convert(result[0])
     }
 
     async persist(problem: Problem): Promise<Problem> {

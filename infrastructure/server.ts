@@ -30,6 +30,9 @@ import { ContestSerializer } from '../interfaces/serializers/ContestSerializer.t
 import { ContestRepository } from '../interfaces/database/ContestRepository.ts';
 import { ContestConverter } from '../application/converter/ContestConverter.ts';
 import { ContestController } from '../interfaces/controllers/ContestController.ts';
+import { DailySerializer } from '../interfaces/serializers/DailySerializer.ts';
+import { DailyConverter } from '../application/converter/DailyConverter.ts';
+import { DailyController } from '../interfaces/controllers/DailyController.ts';
 
 export class server {
   private _mysqlConnection
@@ -40,6 +43,7 @@ export class server {
   private _serverController
   private _resultController
   private _contestController
+  private _dailyController
 
   private _userSerializer
   private _submissionSerializer
@@ -48,6 +52,7 @@ export class server {
   private _resultSerializer
   private _contestResultSerializer
   private _contestSerializer
+  private _dailySerializer
 
   private _userRepository
   private _submissionRepository
@@ -61,6 +66,7 @@ export class server {
   private _resultConverter
   private _userConverter
   private _contestConverter
+  private _dailyConverter
 
   private static _instance: server
 
@@ -74,6 +80,7 @@ export class server {
       this._resultSerializer = new ResultSerializer()
       this._contestResultSerializer = new ContestResultSerializer()
       this._contestSerializer = new ContestSerializer()
+      this._dailySerializer = new DailySerializer()
 
       this._userRepository = new UserRepository(this._mysqlConnection)
       this._submissionRepository = new SubmissionRepository(this._mysqlConnection)
@@ -87,6 +94,7 @@ export class server {
       this._resultConverter = new ResultConverter()
       this._userConverter = new UserConverter(this._userRepository)
       this._contestConverter = new ContestConverter(this._contestRepository)
+      this._dailyConverter = new DailyConverter()
 
       this._userController = new UserController(this.userConverter, this._userSerializer)
       this._submissionController = new SubmissionController(this._submissionConverter, this._submissionSerializer)
@@ -94,6 +102,7 @@ export class server {
       this._serverController = new ServerController(this._serverConverter, this._serverSerializer)
       this._resultController = new ResultController(this._resultConverter, this._resultSerializer, this._contestResultSerializer)
       this._contestController = new ContestController(this._contestConverter, this._contestSerializer)
+      this._dailyController = new DailyController(this._dailyConverter, this._dailySerializer)
   }
 
   static get instance(){
@@ -131,6 +140,10 @@ export class server {
     return this._contestController
   }
 
+  get dailyController() {
+    return this._dailyController
+  }
+
   get userSerializer() {
     return this._userSerializer
   }
@@ -157,6 +170,10 @@ export class server {
 
   get contestSerializer() {
     return this._contestSerializer
+  }
+
+  get dailySerializer() {
+    return this._dailySerializer
   }
 
   get userRepository() {
@@ -202,6 +219,10 @@ export class server {
   get contestConverter() {
     return this._contestConverter
   }
+
+  get dailyConverter() {
+    return this._dailyConverter
+  }
 }
 
 const app = express()
@@ -220,5 +241,5 @@ app.listen(3000, () => {
 //提出を1時間おきに集める 2023/12/23 21:00 = 1703332800
 //collectSubmission(1703332800, 3600000)
 //問題を1日おきに更新
-collectProblem(1000*60*60*24)
+//collectProblem(1000*60*60*24)
 
