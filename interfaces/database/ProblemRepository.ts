@@ -15,7 +15,11 @@ export class ProblemRepository extends IProblemRepository {
     }
 
     async findByID(problemID: string): Promise<Problem> {
-        throw new Error("Method not implemented.");
+        let result = await this.connection.execute(
+            'select * from problems where id = ?',
+            problemID
+        )
+        return new Problem(result[0].id, result[0].contest_id, result[0].problem_index, result[0].name, result[0].title, result[0]._point, result[0].difficulty)
     }
 
     async persist(problem: Problem): Promise<Problem> {
@@ -23,11 +27,11 @@ export class ProblemRepository extends IProblemRepository {
     }
 
     async persistAll(problems: Problem[]): Promise<Problem[]> {
-        let query = `insert ignore into problems (id, contest_id, problem_index, name, title, difficulty) values `
+        let query = `insert into problems (id, contest_id, problem_index, name, title, _point, difficulty) values `
         const list: any[] = []
 
         for(var i = 0; i < problems.length; i++) {
-             query += "(?, ?, ?, ?, ?, ?)"
+             query += "(?, ?, ?, ?, ?, ?, ?)"
              if(i != problems.length-1) query += ", "
 
              const problem = problems[i]
@@ -37,9 +41,12 @@ export class ProblemRepository extends IProblemRepository {
                 problem.problemIndex,
                 problem.name,
                 problem.title,
+                problem.point,
                 problem.difficulty,
              )
         }
+
+        query += " on duplicate key update contest_id = values(contest_id), problem_index = values(problem_index), name = values(name), title = values(title), _point = values(_point), difficulty = values(difficulty)"
         
         let result = await this.connection.execute(
             query,

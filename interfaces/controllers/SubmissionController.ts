@@ -30,9 +30,10 @@ export class SubmissionController {
     }
 
     async getUserSubmissionsByTime(req: any, res: any) {
-        const {atcoderID, from} = req.body
+        const {atcoderID} = req.body
+        let {from, to} = req.query
 
-        let result = await this.submissionConverter.getUserSubmissionsByTime(atcoderID, from)
+        let result = await this.submissionConverter.getUserSubmissionsByTime(atcoderID, from, to)
 
         return this.submissionSerializer.serialize(result)
     }

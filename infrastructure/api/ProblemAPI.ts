@@ -21,8 +21,6 @@ export async function getProblems() {
 
                     if(diff) diff = Math.round(diff >= 400 ? diff : 400 / Math.exp(1.0 - diff / 400));
 
-                    difficulty.set(problemID, diff)
-
                     problems[i].difficulty = diff
                 }
                 resolve(problems)
@@ -30,6 +28,4 @@ export async function getProblems() {
         })
     })
 }
-
-export const difficulty = new Map<string, number>
 

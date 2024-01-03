@@ -2,11 +2,11 @@ import { Problem } from "../../domain/models/Problem.ts"
 
 const _serializeSingleProblem = (problem: Problem) => {
     return {
-        id: problem.problemID,
-        contest_id: problem.contestID,
-        problem_index: problem.problemIndex,
+        problemID: problem.problemID,
+        problemIndex: problem.problemIndex,
+        contestID: problem.contestID,
         name: problem.name,
-        title: problem.title,
+        point: problem.point,
         difficulty: problem.difficulty
     }
 }

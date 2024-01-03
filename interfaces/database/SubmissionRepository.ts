@@ -33,12 +33,13 @@ export class SubmissionRepository extends ISubmissionRepository {
         return this.convert(result[0])
     }
 
-    async findByIdAndTime(atcoderID: string, from: number): Promise<Submission[]> {
+    async findByIdAndTime(atcoderID: string, from: number, to: number): Promise<Submission[]> {
         let result = await this.connection.execute(
-            'select * from submissions where user_id = ? and epoch_second >= ?',
+            'select * from submissions where user_id = ? and epoch_second >= ? and epoch_second <= ?',
             [
                 atcoderID,
                 from,
+                to
             ]
         )
         

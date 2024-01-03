@@ -23,9 +23,9 @@ export class SubmissionConverter {
         return res
     }
 
-    async getUserSubmissionsByTime(atcoderID: string, from: number) {
+    async getUserSubmissionsByTime(atcoderID: string, from: number, to: number) {
         let useCase = new GetUserSubmissionsByTime(this.submissionRepository)
-        let res = await useCase.execute(atcoderID, from)
+        let res = await useCase.execute(atcoderID, from, to)
         return res
     }
 

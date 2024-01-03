@@ -4,7 +4,6 @@ import { server } from './server.ts';
 let router = express.Router()
 
 //Users
-
 router.get('/users', async (req: express.Request, res: express.Response) => {
   let result = await server.instance.userController.listUsers(req,res)
   res.send(result)
@@ -26,7 +25,6 @@ router.delete('/users/:discordID', async (req: express.Request, res: express.Res
 })
 
 //Servers
-
 router.post('/servers/init', async (req: express.Request, res: express.Response) => {
   let result = await server.instance.serverController.createServer(req,res)
   res.send(result)
@@ -42,15 +40,34 @@ router.get('/servers/:serverID', async (req: express.Request, res: express.Respo
   res.send(result)
 })
 
+//Daily
+
+//Results
+router.get('/results/server/:serverID', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.resultController.getUserResultByTimeAndServer(req, res)
+  res.send(result)
+})
+
+router.get('/results/user/:atcoderID', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.resultController.getUserResultByTime(req, res)
+  res.send(result)
+})
+
+router.get('/results/contest/:contestID', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.resultController.getUserResultByContest(req, res)
+  res.send(result)
+})
+
+//Contests
+router.get('/contests', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.contestController.getContestByTime(req,res)
+  res.send(result)
+})
 
 router.get('/submissions/from', async (req: express.Request, res: express.Response) => {
   let result = await server.instance.submissionController.getUserSubmissionsByTime(req, res)
   res.send(result)
 })
 
-router.get('/result/server', async (req: express.Request, res: express.Response) => {
-  let result = await server.instance.resultController.getUserResultByTimeAndServer(req, res)
-  res.send(result)
-})
 
 export default router
