@@ -22,7 +22,7 @@ export class ServerRepository extends IServerRepository {
             ]
         )
         
-        return new Server(serverID, JSON.parse(result[0].members), result[0].dailyID)
+        return new Server(serverID, JSON.parse(result[0].members), result[0].daily_id)
     }
 
     async persist(server: Server): Promise<Server> {

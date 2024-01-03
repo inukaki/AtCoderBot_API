@@ -17,7 +17,7 @@ export class UserRepository extends IUserRepository {
         return result.map((x: any) => {return new User(x.discord_id, x.atcoder_id, x.rating, JSON.parse(x.solved))})
     }
 
-    //TODO 存在しない場合 複数ある場合
+    //TODO 複数ある場合
     /**
      * Discord ID から User を探す
      * @param discordID 
@@ -30,6 +30,10 @@ export class UserRepository extends IUserRepository {
                 discordID
             ]
         )
+
+        if(result.length == 0) {
+            return Promise.reject("Not found")
+        }
         
         return new User(discordID, result[0].atcoder_id, result[0].rating, JSON.parse(result[0].solved))
     }

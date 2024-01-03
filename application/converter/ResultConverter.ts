@@ -32,7 +32,9 @@ export class ResultConverter {
         let result: Result[] = []
 
         for (const member of s.members) {
-            let memberResult = await this.getUserResultByTime(member, from, to)
+            let user = await server.instance.userConverter.getUser(member)
+
+            let memberResult = await this.getUserResultByTime(user.atcoderID, from, to)
             result.push(memberResult)
         }
 

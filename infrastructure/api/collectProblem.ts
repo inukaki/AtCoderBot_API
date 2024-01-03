@@ -25,7 +25,7 @@ async function collectProblem(delay: number) {
         list.splice(0)
 
         for(const contest of contests) {
-            list.push([contest.id,contest.start_epoch_second,contest.duration_second,contest.title,mp.get(contest.id)])
+            list.push([contest.id,contest.start_epoch_second,contest.duration_second,contest.title,mp.get(contest.id) ?? []])
         }
 
         await server.instance.contestConverter.createMultiContest(list)

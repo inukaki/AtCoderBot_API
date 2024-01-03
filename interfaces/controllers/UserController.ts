@@ -22,8 +22,17 @@ export class UserController {
 
     async getUser(req: any, res: any) {
         const discordID = req.params.discordID
+        
         let result = await this.userConverter.getUser(discordID)
-        return this.userSerializer.serialize(result)
+            .then(user => {
+                return this.userSerializer.serialize(user)
+            })
+            .catch(error => {
+                res.status(404)
+                return
+            })
+
+        return result
     }
 
     async linkUser(req:any,res:any){

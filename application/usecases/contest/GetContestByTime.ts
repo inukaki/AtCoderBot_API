@@ -9,7 +9,7 @@ export class GetContestByTime{
 
     execute(from: number, to: number) {
         if(!from) from = 0
-        if(!to) to = Date.now()
+        if(!to) to = 253402182000
         return this.contestRepository.findByTime(from,to)
     }
 }
