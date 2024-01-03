@@ -24,6 +24,15 @@ import { ProblemConverter } from '../application/converter/ProblemConverter.ts';
 import { getProblems } from './api/ProblemAPI.ts';
 import { getSubmissions } from './api/SubmissionAPI.ts';
 import collectSubmission from './api/collectSubmission.ts';
+import { ProblemSerializer } from '../interfaces/serializers/ProblemSerializer.ts';
+import { ContestResultSerializer } from '../interfaces/serializers/ContestResultSerializer.ts';
+import { ContestSerializer } from '../interfaces/serializers/ContestSerializer.ts';
+import { ContestRepository } from '../interfaces/database/ContestRepository.ts';
+import { ContestConverter } from '../application/converter/ContestConverter.ts';
+import { ContestController } from '../interfaces/controllers/ContestController.ts';
+import { DailySerializer } from '../interfaces/serializers/DailySerializer.ts';
+import { DailyConverter } from '../application/converter/DailyConverter.ts';
+import { DailyController } from '../interfaces/controllers/DailyController.ts';
 
 export class server {
   private _mysqlConnection
@@ -33,23 +42,31 @@ export class server {
   private _problemController
   private _serverController
   private _resultController
+  private _contestController
+  private _dailyController
 
   private _userSerializer
   private _submissionSerializer
-  //private _problemSerializer
+  private _problemSerializer
   private _serverSerializer
   private _resultSerializer
+  private _contestResultSerializer
+  private _contestSerializer
+  private _dailySerializer
 
   private _userRepository
   private _submissionRepository
   private _problemRepository
   private _serverRepository
+  private _contestRepository
 
   private _submissionConverter
   private _problemConverter
   private _serverConverter
   private _resultConverter
   private _userConverter
+  private _contestConverter
+  private _dailyConverter
 
   private static _instance: server
 
@@ -58,26 +75,34 @@ export class server {
 
       this._userSerializer = new UserSerializer()
       this._submissionSerializer = new SubmissionSerializer()
-      //this._problemSerializer = new ProblemSerializer()
+      this._problemSerializer = new ProblemSerializer()
       this._serverSerializer = new ServerSerializer()
       this._resultSerializer = new ResultSerializer()
+      this._contestResultSerializer = new ContestResultSerializer()
+      this._contestSerializer = new ContestSerializer()
+      this._dailySerializer = new DailySerializer()
 
       this._userRepository = new UserRepository(this._mysqlConnection)
       this._submissionRepository = new SubmissionRepository(this._mysqlConnection)
       this._problemRepository = new ProblemRepository(this._mysqlConnection)
       this._serverRepository = new ServerRepository(this._mysqlConnection)
+      this._contestRepository = new ContestRepository(this.mysqlConnection)
 
       this._submissionConverter = new SubmissionConverter(this._submissionRepository)
       this._problemConverter = new ProblemConverter(this._problemRepository)
       this._serverConverter = new ServerConverter(this._serverRepository)
       this._resultConverter = new ResultConverter()
       this._userConverter = new UserConverter(this._userRepository)
+      this._contestConverter = new ContestConverter(this._contestRepository)
+      this._dailyConverter = new DailyConverter()
 
       this._userController = new UserController(this.userConverter, this._userSerializer)
       this._submissionController = new SubmissionController(this._submissionConverter, this._submissionSerializer)
-      this._problemController = new ProblemController(this._problemConverter)
+      this._problemController = new ProblemController(this._problemConverter, this._problemSerializer)
       this._serverController = new ServerController(this._serverConverter, this._serverSerializer)
-      this._resultController = new ResultController(this._resultConverter, this._resultSerializer)
+      this._resultController = new ResultController(this._resultConverter, this._resultSerializer, this._contestResultSerializer)
+      this._contestController = new ContestController(this._contestConverter, this._contestSerializer)
+      this._dailyController = new DailyController(this._dailyConverter, this._dailySerializer)
   }
 
   static get instance(){
@@ -111,6 +136,14 @@ export class server {
     return this._resultController
   }
 
+  get contestController() {
+    return this._contestController
+  }
+
+  get dailyController() {
+    return this._dailyController
+  }
+
   get userSerializer() {
     return this._userSerializer
   }
@@ -118,17 +151,29 @@ export class server {
   get submissionSerializer() {
     return this._submissionSerializer
   }
-/*
+
   get problemSerializer() {
     return this._problemSerializer
   }
-*/
+
   get serverSerializer() {
     return this._serverSerializer
   }
 
   get resultSerializer() {
     return this._resultSerializer
+  }
+
+  get contestResultSerializer() {
+    return this._contestResultSerializer
+  }
+
+  get contestSerializer() {
+    return this._contestSerializer
+  }
+
+  get dailySerializer() {
+    return this._dailySerializer
   }
 
   get userRepository() {
@@ -145,6 +190,10 @@ export class server {
 
   get serverRepository() {
     return this._serverRepository
+  }
+
+  get contestRepository() {
+    return this._contestRepository
   }
 
   get submissionConverter() {
@@ -166,6 +215,14 @@ export class server {
   get userConverter() {
     return this._userConverter
   }
+
+  get contestConverter() {
+    return this._contestConverter
+  }
+
+  get dailyConverter() {
+    return this._dailyConverter
+  }
 }
 
 const app = express()
@@ -185,3 +242,4 @@ app.listen(3000, () => {
 //collectSubmission(1703332800, 3600000)
 //問題を1日おきに更新
 collectProblem(1000*60*60*24)
+

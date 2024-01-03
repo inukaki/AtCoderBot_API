@@ -7,7 +7,9 @@ export class GetUserSubmissionsByTime {
         this.submissionRepository = submissionRepository
     }
 
-    execute(atcoderID: string, from: number) {
-        return this.submissionRepository.findByIdAndTime(atcoderID, from)
+    execute(atcoderID: string, from: number, to: number) {
+        if(!from) from = 0
+        if(!to) to = Date.now()
+        return this.submissionRepository.findByIdAndTime(atcoderID, from, to)
     }
 }

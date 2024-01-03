@@ -5,8 +5,8 @@ export class ProblemController {
     private problemSerializer: ProblemSerializer
     private problemConverter: ProblemConverter
 
-    constructor(problemConverter: ProblemConverter) {
-        this.problemSerializer = new ProblemSerializer()
+    constructor(problemConverter: ProblemConverter, problemSerializer: ProblemSerializer) {
+        this.problemSerializer = problemSerializer
         this.problemConverter = problemConverter
     }
 
@@ -20,6 +20,6 @@ export class ProblemController {
 
         let result = await this.problemConverter.createMultiProblem(list)
         
-        return this.problemSerializer.serialize(result)
+        return await this.problemSerializer.serialize(result)
     }
 }

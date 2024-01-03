@@ -10,6 +10,11 @@ export class SubmissionRepository extends ISubmissionRepository {
         this.connection = connection;
     }
 
+    //json -> model
+    convert(x: any) {
+        return new Submission(x.id, x.epoch_second, x.problem_id, x.contest_id, x.user_id, x._language, x._point, x._length, x._result, x.execution_time)
+    }
+
     async findAll(): Promise<Submission[]> {
         throw new Error("Method not implemented.");
     }
@@ -18,16 +23,27 @@ export class SubmissionRepository extends ISubmissionRepository {
         throw new Error("Method not implemented.");
     }
 
-    async findByIdAndTime(atcoderID: string, from: number): Promise<Submission[]> {
+    async findLatest(): Promise<any> {
         let result = await this.connection.execute(
-            'select * from submissions where user_id = ? and epoch_second >= ?',
+            'select * from submissions where id = (select max(id) from submissions)'
+        )
+
+        if(result.length == 0) return undefined
+
+        return this.convert(result[0])
+    }
+
+    async findByIdAndTime(atcoderID: string, from: number, to: number): Promise<Submission[]> {
+        let result = await this.connection.execute(
+            'select * from submissions where user_id = ? and epoch_second >= ? and epoch_second <= ?',
             [
                 atcoderID,
                 from,
+                to
             ]
         )
         
-        return result.map((x: any) => new Submission(x.id, x.epoch_second, x.problem_id, x.contest_id, x.user_id, x._language, x._point, x._length, x._result, x.execution_time))   
+        return result.map(this.convert)   
     }
 
     async persist(submission: Submission): Promise<Submission> {

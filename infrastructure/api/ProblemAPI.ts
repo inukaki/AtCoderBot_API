@@ -7,7 +7,7 @@ const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
  */
 export async function getProblems() {
     return new Promise<any[]>(async (resolve,reject) => {
-        await axios.get('https://kenkoooo.com/atcoder/resources/problems.json').then(async (res1: { data: any }) => {
+        await axios.get('https://kenkoooo.com/atcoder/resources/merged-problems.json').then(async (res1: { data: any }) => {
             const problems = res1.data
 
             await sleep(5000)
@@ -17,9 +17,9 @@ export async function getProblems() {
 
                 for(let i = 0; i < problems.length; i++) {
                     const problemID = problems[i].id
-                    const diff: number = (problemID in difficulties) ? difficulties[problemID].difficulty : undefined
+                    let diff: number = (problemID in difficulties) ? difficulties[problemID].difficulty : undefined
 
-                    difficulty.set(problemID, diff)
+                    if(diff) diff = Math.round(diff >= 400 ? diff : 400 / Math.exp(1.0 - diff / 400));
 
                     problems[i].difficulty = diff
                 }
@@ -28,6 +28,4 @@ export async function getProblems() {
         })
     })
 }
-
-export const difficulty = new Map<string, number>
 

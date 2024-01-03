@@ -1,15 +1,11 @@
-import { Color } from "./Difficulty"
-
 export class Server {
-    private _serverID: number
+    private _serverID: string
     private _members: string[] //AtCoder ID
-    private _daily: boolean
-    private _dailyID: Color[]
+    private _dailyID: string
 
-    constructor(serverID: number, members: string[], daily: boolean, dailyID: Color[]) {
+    constructor(serverID: string, members: string[], dailyID: string) {
         this._serverID = serverID
         this._members = members
-        this._daily = daily
         this._dailyID = dailyID
     }
 
@@ -19,10 +15,6 @@ export class Server {
 
     get members() {
         return this._members
-    }
-
-    get daily() {
-        return this._daily
     }
 
     get dailyID() {
