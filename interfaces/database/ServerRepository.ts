@@ -52,4 +52,25 @@ export class ServerRepository extends IServerRepository {
         )
     }
 
+    async deleteMember(serverID: string, discordID: string) {
+        if(!discordID) return this.deleteAllMembers(serverID)
+
+        let result = await this.connection.execute(
+            "update servers set members=IFNULL(JSON_REMOVE(members,JSON_UNQUOTE(JSON_SEARCH(members,'one',?))),members) where server_id = ?",
+            [
+                discordID,
+                serverID
+            ]
+        )
+    }
+
+    async deleteAllMembers(serverID: string) {
+        let result = await this.connection.execute(
+            "update servers set members='[]' where server_id = ?",
+            [
+                serverID
+            ]
+        )
+    }
+
 }

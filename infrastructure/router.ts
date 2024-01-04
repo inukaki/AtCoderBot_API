@@ -30,8 +30,13 @@ router.post('/servers/init', async (req: express.Request, res: express.Response)
   res.send(result)
 })
 
-router.post('/servers/members', async (req: express.Request, res: express.Response) => {
+router.post('/servers/members/:serverID', async (req: express.Request, res: express.Response) => {
   let result = await server.instance.serverController.addMember(req,res)
+  res.send(result)
+})
+
+router.delete('/servers/members/:serverID', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.serverController.deleteMember(req,res)
   res.send(result)
 })
 

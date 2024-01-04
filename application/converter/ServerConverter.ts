@@ -1,6 +1,7 @@
 import { IServerRepository } from "../repositories/IServerRepository.ts";
 import { AddMember } from "../usecases/server/AddMember.ts";
 import { CreateServer } from "../usecases/server/CreateServer.ts";
+import { DeleteMember } from "../usecases/server/DeleteMember.ts";
 import { GetServer } from "../usecases/server/GetServer.ts";
 
 export class ServerConverter {
@@ -22,9 +23,15 @@ export class ServerConverter {
         return result
     }
 
-    async addMember(serverID: string, atcoderID: string) {
+    async addMember(serverID: string, discordID: string) {
         let useCase = new AddMember(this.serverRepository)
-        let result = await useCase.execute(serverID, atcoderID)
+        let result = await useCase.execute(serverID, discordID)
+        return result
+    }
+
+    async deleteMember(serverID: string, discordID: string) {
+        let useCase = new DeleteMember(this.serverRepository)
+        let result = await useCase.execute(serverID, discordID)
         return result
     }
 }

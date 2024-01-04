@@ -50,7 +50,6 @@ export class ResultConverter {
         for(const submission of submissions) {
             if(submission.contestID != contestID) continue
             if(submission.result != "AC") continue
-            if(submission.contestID != contestID) continue
 
             st.add(submission)
         }
