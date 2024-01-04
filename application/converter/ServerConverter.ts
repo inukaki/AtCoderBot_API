@@ -3,6 +3,7 @@ import { AddMember } from "../usecases/server/AddMember.ts";
 import { CreateServer } from "../usecases/server/CreateServer.ts";
 import { DeleteMember } from "../usecases/server/DeleteMember.ts";
 import { GetServer } from "../usecases/server/GetServer.ts";
+import { UpdateDailyID } from "../usecases/server/UpdateDailyID.ts";
 
 export class ServerConverter {
     private serverRepository: IServerRepository
@@ -32,6 +33,12 @@ export class ServerConverter {
     async deleteMember(serverID: string, discordID: string) {
         let useCase = new DeleteMember(this.serverRepository)
         let result = await useCase.execute(serverID, discordID)
+        return result
+    }
+
+    async updateDailyID(serverID: string, dailyID: string) {
+        let useCase = new UpdateDailyID(this.serverRepository)
+        let result = await useCase.execute(serverID,dailyID)
         return result
     }
 }

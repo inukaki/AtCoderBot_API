@@ -7,4 +7,5 @@ export abstract class IServerRepository {
     abstract delete(server: Server): Promise<Server>
     abstract addMember(serverID: string, discordID: string): Promise<void>
     abstract deleteMember(serverID: string, discordID: string): Promise<void>
+    abstract updateDailyID(serverID: string, dailyID: string): Promise<void>
 }

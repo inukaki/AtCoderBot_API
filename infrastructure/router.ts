@@ -40,10 +40,16 @@ router.delete('/servers/members/:serverID', async (req: express.Request, res: ex
   res.send(result)
 })
 
+router.patch('/servers/daily/:serverID', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.serverController.updateDailyID(req,res)
+  res.send(result)
+})
+
 router.get('/servers/:serverID', async (req: express.Request, res: express.Response) => {
   let result = await server.instance.serverController.getServer(req,res)
   res.send(result)
 })
+
 
 //Daily
 router.get('/daily', async (req: express.Request, res: express.Response) => {

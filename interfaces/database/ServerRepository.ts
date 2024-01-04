@@ -73,4 +73,13 @@ export class ServerRepository extends IServerRepository {
         )
     }
 
+    async updateDailyID(serverID: string, dailyID: string) {
+        let result = await this.connection.execute(
+            "update servers set daily_id = ? where server_id = ?",
+            [
+                dailyID,
+                serverID
+            ]
+        )
+    }
 }
