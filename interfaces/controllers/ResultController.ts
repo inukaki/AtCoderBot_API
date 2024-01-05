@@ -37,7 +37,7 @@ export class ResultController {
         return {serverID: serverID,
                 from: Number(from),
                 to: Number(to),
-                result: serialized}
+                results: serialized}
     }
 
     async getUserResultByContest(req: any, res: any) {

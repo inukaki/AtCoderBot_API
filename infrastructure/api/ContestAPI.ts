@@ -58,7 +58,6 @@ export async function getFutureContests() {
                     json.id = match[1]
                 }
             }else if(text.startsWith("コンテスト時間")){
-                console.log(text)
                 const match = text.match(/コンテスト時間： (.+) 分/)
 
                 if(match){
