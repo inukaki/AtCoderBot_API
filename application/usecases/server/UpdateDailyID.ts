@@ -1,14 +1,13 @@
-import { Server } from "../../../domain/models/Server.ts"
 import { IServerRepository } from "../../repositories/IServerRepository.ts"
 
-export class AddMember {
+export class UpdateDailyID {
     private serverRepository: IServerRepository
 
     constructor(serverRepository: IServerRepository) {
         this.serverRepository = serverRepository
     }
 
-    execute(serverID: string, discordID: string) {
-        return this.serverRepository.addMember(serverID, discordID)
+    execute(serverID: string, dailyID: string) {
+        return this.serverRepository.updateDailyID(serverID, dailyID)
     }
 }

@@ -30,8 +30,18 @@ router.post('/servers/init', async (req: express.Request, res: express.Response)
   res.send(result)
 })
 
-router.post('/servers/members', async (req: express.Request, res: express.Response) => {
+router.post('/servers/members/:serverID', async (req: express.Request, res: express.Response) => {
   let result = await server.instance.serverController.addMember(req,res)
+  res.send(result)
+})
+
+router.delete('/servers/members/:serverID', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.serverController.deleteMember(req,res)
+  res.send(result)
+})
+
+router.patch('/servers/daily/:serverID', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.serverController.updateDailyID(req,res)
   res.send(result)
 })
 
@@ -39,6 +49,7 @@ router.get('/servers/:serverID', async (req: express.Request, res: express.Respo
   let result = await server.instance.serverController.getServer(req,res)
   res.send(result)
 })
+
 
 //Daily
 router.get('/daily', async (req: express.Request, res: express.Response) => {

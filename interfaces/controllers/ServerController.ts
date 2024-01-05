@@ -24,7 +24,23 @@ export class ServerController {
     }
 
     async addMember(req: any, res: any) {
-        const {serverID,discordID} = req.body
+        const {serverID} = req.params
+        const {discordID} = req.body
         let result = await this.serverConverter.addMember(serverID, discordID)
+    }
+
+    async deleteMember(req: any, res: any) {
+        const {serverID} = req.params
+        const {discordID} = req.query
+        
+        let result = await this.serverConverter.deleteMember(serverID, discordID)
+    }
+
+    async updateDailyID(req: any, res: any) {
+        const {serverID} = req.params
+        const {dailyID} = req.body
+
+        let result = await this.serverConverter.updateDailyID(serverID,dailyID)
+        
     }
 }

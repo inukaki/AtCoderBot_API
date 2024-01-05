@@ -1,7 +1,6 @@
-import { Server } from "../../../domain/models/Server.ts"
 import { IServerRepository } from "../../repositories/IServerRepository.ts"
 
-export class AddMember {
+export class DeleteMember {
     private serverRepository: IServerRepository
 
     constructor(serverRepository: IServerRepository) {
@@ -9,6 +8,6 @@ export class AddMember {
     }
 
     execute(serverID: string, discordID: string) {
-        return this.serverRepository.addMember(serverID, discordID)
+        return this.serverRepository.deleteMember(serverID, discordID)
     }
 }
