@@ -63,7 +63,7 @@ export class ContestRepository extends IContestRepository {
              )
         }
 
-        query += " on duplicate key update id = values(id), start_at = values(start_at), duration_second = values(duration_second), problems = values(problems)"
+        query += " on duplicate key update start_at = values(start_at), duration_second = values(duration_second), problems = values(problems)"
 
         let result = await this.connection.execute(
             query,

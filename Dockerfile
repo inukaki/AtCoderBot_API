@@ -1,4 +1,4 @@
-FROM node:17.4.0-alpine
+FROM node
 WORKDIR /usr/src/api
 COPY . .
 
@@ -7,11 +7,13 @@ USER root
 
 RUN npm install
 RUN npm install axios
-RUN apk add curl
 RUN npm install typescript
 RUN npm install -g ts-node
 RUN npm install -g express
 RUN npm install -g dotenv
+RUN npm install -g tsx
+RUN npx playwright install-deps
+RUN npx playwright install
 #--save-dev
 RUN npm i --save-dev @types/express
 RUN npm i --save-dev @types/mysql

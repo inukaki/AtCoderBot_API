@@ -1,14 +1,20 @@
 import { getProblems } from './ProblemAPI.ts';
 import { server } from '../server.ts';
-import { getContests } from './ContestAPI.ts';
+import { getContests, getFutureContests } from './ContestAPI.ts';
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 async function collectProblem(delay: number) {
     const insertProblems = async () => {
-        const contests = await getContests()
-        sleep(10000)
-        const problems = await getProblems()
+        await sleep(10000)
+        let contests: any[] = await getContests()
+        await sleep(10000)
+        let problems: any[] = await getProblems()
+
+        const future = await getFutureContests()
+
+        contests = contests.concat(future.contests)
+        problems = problems.concat(future.problems)
 
         const list: any[] = []
 
