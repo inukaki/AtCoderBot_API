@@ -23,6 +23,10 @@ export class VirtualContest {
         return this._virtualContestID
     }
 
+    set virtualContestID(virtualContestID: number) {
+        this._virtualContestID = virtualContestID
+    }
+
     get startAt() {
         return this._startAt
     }
@@ -50,4 +54,5 @@ export class VirtualContest {
     get problems() {
         return this._problems
     }
+    
 }

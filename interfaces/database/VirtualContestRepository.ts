@@ -14,12 +14,40 @@ export class VirtualContestRepository extends IVirtualContestRepository {
         throw new Error("Method not implemented.");
     }
 
-    async findByTime(from: number, to: number): Promise<VirtualContest[]> {
-        throw new Error("Method not implemented.");
+    async findByTimeAndServerID(serverID: string, from: number, to: number): Promise<VirtualContest[]> {
+        let result = await this.connection.execute(
+            'select * from virtual_contests where server_id = ? and start_at >= ? and start_at <= ?',
+            [
+                serverID,
+                from,
+                to
+            ]
+        )
+
+        return result.map((x: any) => {return new VirtualContest(x.virtual_contest_id, x.start_at, x.duration_second, x.title, x.visible, x.server_id, JSON.parse(x.members), JSON.parse(x.problems))})
     }
 
-    async findByID(virtualContestID: string): Promise<VirtualContest> {
-        throw new Error("Method not implemented.");
+    async findByTime(from: number, to: number): Promise<VirtualContest[]> {
+        let result = await this.connection.execute(
+            'select * from virtual_contests where start_at >= ? and start_at <= ?',
+            [
+                from,
+                to
+            ]
+        )
+
+        return result.map((x: any) => {return new VirtualContest(x.virtual_contest_id, x.start_at, x.duration_second, x.title, x.visible, x.server_id, JSON.parse(x.members), JSON.parse(x.problems))})
+    }
+
+    async findByID(virtualContestID: number): Promise<VirtualContest> {
+        let result = await this.connection.execute(
+            'select * from virtual_contests where virtual_contest_id = ?',
+            [
+                virtualContestID
+            ]
+        )
+
+        return new VirtualContest(result[0].virtual_contest_id, result[0].start_at, result[0].duration_second, result[0].title, result[0].visible, result[0].server_id, JSON.parse(result[0].members), JSON.parse(result[0].problems))
     }
 
     async persist(virtualContest: VirtualContest): Promise<VirtualContest> {
@@ -32,11 +60,12 @@ export class VirtualContestRepository extends IVirtualContestRepository {
                 virtualContest.title,
                 virtualContest.visible,
                 virtualContest.serverID,
-                virtualContest.members,
-                virtualContest.problems
+                JSON.stringify(virtualContest.members),
+                JSON.stringify(virtualContest.problems)
             ]
         )
-
+        virtualContest.virtualContestID = result.insertId
+  
         return virtualContest
     }
 
@@ -44,7 +73,7 @@ export class VirtualContestRepository extends IVirtualContestRepository {
         throw new Error("Method not implemented.");
     }
 
-    delete(virtualContestID: string): Promise<void> {
+    delete(virtualContestID: number): Promise<void> {
         throw new Error("Method not implemented.");
     }
 

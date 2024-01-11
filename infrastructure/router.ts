@@ -79,6 +79,23 @@ router.get('/contests', async (req: express.Request, res: express.Response) => {
   res.send(result)
 })
 
+//Virtual Contests
+router.get('/virtual_contests', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.virtualContestController.listVirtualContests(req,res)
+  res.send(result)
+})
+
+router.post('/virtual_contests', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.virtualContestController.createVirtualContest(req,res)
+  res.send(result)
+})
+
+router.get('/virtual_contests/standings/:virtualContestID', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.virtualContestController.getVirtualContestStandings(req,res)
+  res.send(result)
+})
+
+
 
 router.get('/submissions/from', async (req: express.Request, res: express.Response) => {
   let result = await server.instance.submissionController.getUserSubmissionsByTime(req, res)

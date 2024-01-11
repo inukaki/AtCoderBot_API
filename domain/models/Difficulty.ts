@@ -9,3 +9,15 @@ export const getColor = (rating: number): string => {
 
     return Color[index]
 }
+
+export const getRating = (color: string): number[] => {
+    let index = Color.indexOf(color)
+
+    let from = (index != 8) ? index * 400 : -1 
+    let to = (index + 1) * 400 - 1
+
+    if(index == 7) to = 10000
+    if(index == 8) to = 0
+
+    return [from,to]
+}
