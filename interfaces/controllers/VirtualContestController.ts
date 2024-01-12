@@ -35,4 +35,11 @@ export class VirtualContestController {
 
         return server.instance.standingSerializer.serialize(result)
     }
+
+    async getVirtualContest(req: any, res: any) {
+        const {virtualContestID} = req.params
+        let result = await this.virtualContestConverter.getVirtualContest(virtualContestID)
+
+        return this.virtualContestSerializer.serialize(result)
+    }
 }
