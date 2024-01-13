@@ -21,8 +21,6 @@ import { ServerConverter } from '../application/converter/ServerConverter.ts';
 import { UserConverter } from '../application/converter/UserConverter.ts';
 import { ResultSerializer } from '../interfaces/serializers/ResultSerializer.ts';
 import { ProblemConverter } from '../application/converter/ProblemConverter.ts';
-import { getProblems } from './api/ProblemAPI.ts';
-import { getSubmissions } from './api/SubmissionAPI.ts';
 import collectSubmission from './api/collectSubmission.ts';
 import { ProblemSerializer } from '../interfaces/serializers/ProblemSerializer.ts';
 import { ContestResultSerializer } from '../interfaces/serializers/ContestResultSerializer.ts';
@@ -33,7 +31,6 @@ import { ContestController } from '../interfaces/controllers/ContestController.t
 import { DailySerializer } from '../interfaces/serializers/DailySerializer.ts';
 import { DailyConverter } from '../application/converter/DailyConverter.ts';
 import { DailyController } from '../interfaces/controllers/DailyController.ts';
-import { VirtualContest } from '../domain/models/VirtualContest.ts';
 import { VirtualContestSerializer } from '../interfaces/serializers/VirtualContestSerializer.ts';
 import { VirtualContestRepository } from '../interfaces/database/VirtualContestRepository.ts';
 import { VirtualContestConverter } from '../application/converter/VirtualContestConverter.ts';

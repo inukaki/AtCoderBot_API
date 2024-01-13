@@ -18,7 +18,7 @@ export class ResultController {
         const {from,to} = req.query
 
         let result = await this.resultConverter.getUserResultByTime(atcoderID, from, to)
-        let serialized = this.resultSerializer.serialize(result)
+        let serialized = await this.resultSerializer.serialize(result)
 
         return {
             from: Number(from),
@@ -32,8 +32,8 @@ export class ResultController {
         const {from,to} = req.query
 
         let result = await this.resultConverter.getUserResultByTimeAndServer(serverID, from, to)
-        let serialized = this.resultSerializer.serialize(result)
-
+        let serialized = await this.resultSerializer.serialize(result)
+        
         return {serverID: serverID,
                 from: Number(from),
                 to: Number(to),
