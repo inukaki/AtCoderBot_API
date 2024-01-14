@@ -1,8 +1,8 @@
 export class Result {
     private _atcoderID: string
-    private _solved: Map<string, number>
+    private _solved: string[]
 
-    constructor(atcoderID: string, solved: Map<string, number>) {
+    constructor(atcoderID: string, solved: string[]) {
         this._atcoderID = atcoderID
         this._solved = solved
     }

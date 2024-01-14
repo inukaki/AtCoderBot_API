@@ -8,22 +8,15 @@ export class ResultConverter {
     async getUserResultByTime(atcoderID: string, from: number, to: number) {
         let submissions = await server.instance.submissionConverter.getUserSubmissionsByTime(atcoderID, from, to)
 
-        let count = new Map<string, number>()
+        let solved = new Set<string>()
 
         for(const submission of submissions) {
             if(submission.result != "AC") continue
-            let diff = (await server.instance.problemConverter.getProblem(submission.problemID)).difficulty
-            if(!diff) diff = 0
-
-            let color = getColor(diff)
-
-            let current = count.get(color)
-            if(!current) current = 0
-
-            count.set(color, current+1)
+            
+            solved.add(submission.problemID)
         }
 
-        return new Result(atcoderID, count)
+        return new Result(atcoderID, Array.from(solved))
     }
 
     async getUserResultByTimeAndServer(serverID: string, from: number, to: number) {
