@@ -24,7 +24,7 @@ export class ProblemRepository extends IProblemRepository {
 
     async findRandom(from: number, to: number, count: number): Promise<Problem[]> {
         let result = await this.connection.execute(
-            'SELECT * FROM problems WHERE difficulty >= ? AND difficulty < ? ORDER BY RAND() LIMIT ?',
+            "SELECT * FROM problems WHERE difficulty >= ? AND difficulty < ? AND _point>=0 AND contest_id NOT LIKE '%ahc%' ORDER BY RAND() LIMIT ?",
             [
                 from,
                 to,
