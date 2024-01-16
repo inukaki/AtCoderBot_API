@@ -46,7 +46,7 @@ export class ServerRepository extends IServerRepository {
         let result = await this.connection.execute(
             "update servers set members=JSON_ARRAY_APPEND(members, '$', ?) where server_id = ?",
             [
-                discordID,
+                JSON.stringify(discordID),
                 serverID
             ]
         )
