@@ -1,23 +1,20 @@
 import { Submission } from "../../domain/models/Submission.ts";
 import axios from 'axios'
+import { server } from "../server.ts";
 
-/**
-* AtCoder ProblemsのSubmission APIから、from以降の提出一覧をjsonで取得 (WJがあった場合、そこまでの提出一覧)
-* @param from この時刻以降のすべての提出を取得する
-*/
 async function getSubmissions(from: number)  {
-    return new Promise<any[]>((resolve,reject) => {
-        const submissions: any[] = []
-
+    return new Promise<void>((resolve,reject) => {
         let last = from
         let finished = false
+
+        let sum = 0
         
         console.log("---------------------")
         console.debug("start: " + from)
         console.log()
         
         const id = setInterval(async () => {
-            await axios.get('https://kenkoooo.com/atcoder/atcoder-api/v3/from/' + last).then((res: { data: any; }) => {
+            await axios.get('https://kenkoooo.com/atcoder/atcoder-api/v3/from/' + last).then(async (res: { data: any; }) => {
             const data = res.data
     
             data.sort()
@@ -28,17 +25,22 @@ async function getSubmissions(from: number)  {
 
             if(length < 1000) finished = true
 
+            const submissions: any[] = []
+
             for(const submission of data) {
                 if(!submission.result.includes("WJ")) {
-                    submissions.push(submission)
+                    submissions.push([submission.id, submission.epoch_second, submission.problem_id, submission.contest_id, submission.user_id, submission.language, submission.point, submission.length, submission.result, submission.execution_time])
+                    sum++
                     continue
                 }
                 finished = true
                 console.log("found WJ: " + submission.epoch_second)
                 break
             }
+            
+            await server.instance.submissionConverter.createMultiSubmission(submissions)
     
-            console.log(`size: ${submissions.length}`)
+            console.log(`${submissions.length} submissions inserted`)
             console.log(`last time: ${last}`)
             console.log()
     
@@ -49,9 +51,9 @@ async function getSubmissions(from: number)  {
     
             if(finished) {
                 clearInterval(id)
-                resolve(submissions)
+                Promise.resolve()
                 console.log("finished")
-                console.log(`sum: ${submissions.length}`)
+                console.log(`sum: ${sum}`)
                 console.log("---------------------")
                 console.log()
             }
