@@ -21,7 +21,7 @@ async function getSubmissions(from: number)  {
 
             const length = Object.keys(data).length
 
-            last = data[length-1].epoch_second + 1
+            if(length!=0) last = data[length-1].epoch_second + 1
 
             if(length < 1000) finished = true
 
@@ -51,7 +51,7 @@ async function getSubmissions(from: number)  {
     
             if(finished) {
                 clearInterval(id)
-                Promise.resolve()
+                resolve()
                 console.log("finished")
                 console.log(`sum: ${sum}`)
                 console.log("---------------------")
