@@ -285,15 +285,8 @@ app.listen(3000, () => {
   console.log('listening on port 3000')
 })
 
-
-
-<<<<<<< HEAD
 //提出を1分おきに集める 2023/12/23 21:00 = 1703332800
-collectSubmission(1705460115, 1000*60)
-=======
-//提出を5分おきに集める 2023/12/23 21:00 = 1703332800
-collectSubmission(1705460115, 1000*30)
->>>>>>> f36defa6f9b1259f305f29d8f613745b27ac92b8
+collectSubmission(1703332800, 1000*60)
 //問題を30分おきに更新
 collectProblem(1000*60*30)
 
