@@ -4,7 +4,7 @@ import { server } from '../server.ts';
 async function collectSubmission(from: number, delay: number) {
     let last = from;
     let lastFinished = true
-
+    
     let latest = (await server.instance.submissionConverter.getLatestSubmission())
 
     if(latest) {
