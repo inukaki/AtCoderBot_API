@@ -32,7 +32,7 @@ export class UserRepository extends IUserRepository {
         )
 
         if(result.length == 0) {
-            return Promise.reject("Not found")
+            return Promise.reject(404)
         }
         
         return new User(discordID, result[0].atcoder_id, result[0].rating, JSON.parse(result[0].solved))
@@ -81,7 +81,7 @@ export class UserRepository extends IUserRepository {
     }
 
     async link(discordID: string, atcoderID: string): Promise<void> {
-        await this.connection.execute(
+        let result = await this.connection.execute(
             'insert into users (atcoder_id, discord_id, rating, solved) values (?, ?, ?, ?) on duplicate key update discord_id = values(discord_id)',
             [
                 atcoderID,
@@ -93,12 +93,14 @@ export class UserRepository extends IUserRepository {
     }
 
     async unlink(discordID: string): Promise<void> {
-        await this.connection.execute(
+        let result = await this.connection.execute(
             'update users set discord_id = null where discord_id = ?',
             [
                 discordID,
             ]
-        )
+        ) 
+
+        if(result.affectedRows == 0) return Promise.reject(404)
     }
 
 }

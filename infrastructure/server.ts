@@ -21,8 +21,6 @@ import { ServerConverter } from '../application/converter/ServerConverter.ts';
 import { UserConverter } from '../application/converter/UserConverter.ts';
 import { ResultSerializer } from '../interfaces/serializers/ResultSerializer.ts';
 import { ProblemConverter } from '../application/converter/ProblemConverter.ts';
-import { getProblems } from './api/ProblemAPI.ts';
-import { getSubmissions } from './api/SubmissionAPI.ts';
 import collectSubmission from './api/collectSubmission.ts';
 import { ProblemSerializer } from '../interfaces/serializers/ProblemSerializer.ts';
 import { ContestResultSerializer } from '../interfaces/serializers/ContestResultSerializer.ts';
@@ -33,6 +31,12 @@ import { ContestController } from '../interfaces/controllers/ContestController.t
 import { DailySerializer } from '../interfaces/serializers/DailySerializer.ts';
 import { DailyConverter } from '../application/converter/DailyConverter.ts';
 import { DailyController } from '../interfaces/controllers/DailyController.ts';
+import { VirtualContestSerializer } from '../interfaces/serializers/VirtualContestSerializer.ts';
+import { VirtualContestRepository } from '../interfaces/database/VirtualContestRepository.ts';
+import { VirtualContestConverter } from '../application/converter/VirtualContestConverter.ts';
+import { VirtualContestController } from '../interfaces/controllers/VirtualContestController.ts';
+import { StandingConverter } from '../application/converter/StandingConverter.ts';
+import { StandingSerializer } from '../interfaces/serializers/StandingSerializer.ts';
 
 export class server {
   private _mysqlConnection
@@ -44,6 +48,8 @@ export class server {
   private _resultController
   private _contestController
   private _dailyController
+  private _virtualContestController
+  private _standingConverter
 
   private _userSerializer
   private _submissionSerializer
@@ -53,12 +59,15 @@ export class server {
   private _contestResultSerializer
   private _contestSerializer
   private _dailySerializer
+  private _virtualContestSerializer
+  private _standingSerializer
 
   private _userRepository
   private _submissionRepository
   private _problemRepository
   private _serverRepository
   private _contestRepository
+  private _virtualContestRepository
 
   private _submissionConverter
   private _problemConverter
@@ -67,6 +76,7 @@ export class server {
   private _userConverter
   private _contestConverter
   private _dailyConverter
+  private _virtualContestConverter
 
   private static _instance: server
 
@@ -81,12 +91,15 @@ export class server {
       this._contestResultSerializer = new ContestResultSerializer()
       this._contestSerializer = new ContestSerializer()
       this._dailySerializer = new DailySerializer()
+      this._virtualContestSerializer = new VirtualContestSerializer()
+      this._standingSerializer = new StandingSerializer()
 
       this._userRepository = new UserRepository(this._mysqlConnection)
       this._submissionRepository = new SubmissionRepository(this._mysqlConnection)
       this._problemRepository = new ProblemRepository(this._mysqlConnection)
       this._serverRepository = new ServerRepository(this._mysqlConnection)
-      this._contestRepository = new ContestRepository(this.mysqlConnection)
+      this._contestRepository = new ContestRepository(this._mysqlConnection)
+      this._virtualContestRepository = new VirtualContestRepository(this._mysqlConnection)
 
       this._submissionConverter = new SubmissionConverter(this._submissionRepository)
       this._problemConverter = new ProblemConverter(this._problemRepository)
@@ -95,6 +108,8 @@ export class server {
       this._userConverter = new UserConverter(this._userRepository)
       this._contestConverter = new ContestConverter(this._contestRepository)
       this._dailyConverter = new DailyConverter()
+      this._virtualContestConverter = new VirtualContestConverter(this._virtualContestRepository)
+      this._standingConverter = new StandingConverter()
 
       this._userController = new UserController(this.userConverter, this._userSerializer)
       this._submissionController = new SubmissionController(this._submissionConverter, this._submissionSerializer)
@@ -103,6 +118,7 @@ export class server {
       this._resultController = new ResultController(this._resultConverter, this._resultSerializer, this._contestResultSerializer)
       this._contestController = new ContestController(this._contestConverter, this._contestSerializer)
       this._dailyController = new DailyController(this._dailyConverter, this._dailySerializer)
+      this._virtualContestController = new VirtualContestController(this._virtualContestConverter, this._virtualContestSerializer)
   }
 
   static get instance(){
@@ -144,6 +160,10 @@ export class server {
     return this._dailyController
   }
 
+  get virtualContestController() {
+    return this._virtualContestController
+  }
+
   get userSerializer() {
     return this._userSerializer
   }
@@ -176,6 +196,14 @@ export class server {
     return this._dailySerializer
   }
 
+  get virtualContestSerializer() {
+    return this._virtualContestSerializer
+  }
+
+  get standingSerializer() {
+    return this._standingSerializer
+  }
+
   get userRepository() {
     return this._userRepository
   }
@@ -194,6 +222,10 @@ export class server {
 
   get contestRepository() {
     return this._contestRepository
+  }
+
+  get virtualContestRepository() {
+    return this._virtualContestRepository
   }
 
   get submissionConverter() {
@@ -223,9 +255,24 @@ export class server {
   get dailyConverter() {
     return this._dailyConverter
   }
+
+  get virtualContestConverter() {
+    return this._virtualContestConverter
+  }
+
+  get standingConverter() {
+    return this._standingConverter
+  }
 }
 
 const app = express()
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 // bodyがundefinedにならないように
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -238,9 +285,8 @@ app.listen(3000, () => {
   console.log('listening on port 3000')
 })
 
-
-//提出を1時間おきに集める 2023/12/23 21:00 = 1703332800
-//collectSubmission(1703332800, 3600000)
+//提出を1分おきに集める 2023/12/23 21:00 = 1703332800
+collectSubmission(1705464392, 1000*60)
 //問題を30分おきに更新
 collectProblem(1000*60*30)
 

@@ -42,6 +42,9 @@ export class UserController {
 
     async unlinkUser(req:any,res:any){
         const discordID = req.params.discordID
-        let result = await this.userConverter.unlinkUser(discordID)
+        let result = await this.userConverter.unlinkUser(discordID).catch(error => {
+            res.status(404)
+            return
+        })
     }
 }
