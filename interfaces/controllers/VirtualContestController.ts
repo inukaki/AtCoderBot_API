@@ -56,15 +56,31 @@ export class VirtualContestController {
 
     async getVirtualContestStandings(req: any, res: any) {
         const {virtualContestID} = req.params
-        let result = await server.instance.standingConverter.getVirtualContestStandings(virtualContestID)
+        let result = await server.instance.standingConverter.getVirtualContestStandings(virtualContestID).then(
+            server.instance.standingSerializer.serialize
+        ).catch(
+            () => {
+                res.status(404)
+                return
+            }
+        )
 
-        return server.instance.standingSerializer.serialize(result)
+        return result
     }
 
     async getVirtualContest(req: any, res: any) {
         const {virtualContestID} = req.params
-        let result = await this.virtualContestConverter.getVirtualContest(virtualContestID)
+        let result = await this.virtualContestConverter.getVirtualContest(virtualContestID).then(
+            (virtualContest) => {
+                return this.virtualContestSerializer.serialize(virtualContest)
+            }
+        ).catch(
+            () => {
+                res.status(404)
+                return
+            }
+        )
 
-        return this.virtualContestSerializer.serialize(result)
+        return result
     }
 }

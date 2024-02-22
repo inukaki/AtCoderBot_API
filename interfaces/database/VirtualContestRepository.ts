@@ -47,7 +47,7 @@ export class VirtualContestRepository extends IVirtualContestRepository {
             ]
         )
 
-        if(result.length == 0) return Promise.reject("Not found")
+        if(result.length == 0) return Promise.reject(404)
 
         return new VirtualContest(result[0].virtual_contest_id, result[0].start_at, result[0].duration_second, result[0].title, result[0].visible, result[0].server_id, JSON.parse(result[0].members), JSON.parse(result[0].problems))
     }
