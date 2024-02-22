@@ -47,6 +47,8 @@ export class VirtualContestRepository extends IVirtualContestRepository {
             ]
         )
 
+        if(result.length == 0) return Promise.reject("Not found")
+
         return new VirtualContest(result[0].virtual_contest_id, result[0].start_at, result[0].duration_second, result[0].title, result[0].visible, result[0].server_id, JSON.parse(result[0].members), JSON.parse(result[0].problems))
     }
 
@@ -65,6 +67,24 @@ export class VirtualContestRepository extends IVirtualContestRepository {
             ]
         )
         virtualContest.virtualContestID = result.insertId
+  
+        return virtualContest
+    }
+
+    async merge(virtualContest: VirtualContest) {
+        let result = await this.connection.execute(
+            'insert into virtual_contests (virtual_contest_id, start_at, duration_second, title, visible, server_id, members, problems) values (?, ?, ?, ?, ?, ?, ?, ?) on duplicate key update start_at = values(start_at), duration_second = values(duration_second), title = values(title), visible = values(visible), server_id = values(server_id), members = values(members), problems = values(problems)',
+            [
+                virtualContest.virtualContestID,
+                virtualContest.startAt,
+                virtualContest.durationSecond,
+                virtualContest.title,
+                virtualContest.visible,
+                virtualContest.serverID,
+                JSON.stringify(virtualContest.members),
+                JSON.stringify(virtualContest.problems)
+            ]
+        )
   
         return virtualContest
     }
