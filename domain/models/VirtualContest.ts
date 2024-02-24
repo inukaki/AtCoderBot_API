@@ -31,28 +31,55 @@ export class VirtualContest {
         return this._startAt
     }
 
+    set startAt(startAt: number) {
+        this._startAt = startAt
+    }
+
     get durationSecond() {
         return this._durationSecond
+    }
+
+    set durationSecond(durationSecond: number) {
+        this._durationSecond = durationSecond
     }
 
     get title() {
         return this._title
     }
 
+    set title(title: string) {
+        this._title = title
+    }
+
     get visible() {
         return this._visible
+    }
+
+    set visible(visible: string) {
+        this._visible = visible
     }
 
     get serverID() {
         return this._serverID
     }
 
+    set serverID(serverID: string) {
+        this._serverID = serverID
+    }
+
     get members() {
         return this._members
+    }
+
+    set members(members: string[]) {
+        this._members = members
     }
 
     get problems() {
         return this._problems
     }
-    
+
+    set problems(problems: string[]) {
+        this._problems = problems
+    }
 }

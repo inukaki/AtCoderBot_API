@@ -95,6 +95,11 @@ router.get('/virtual_contests/:virtualContestID', async (req: express.Request, r
   res.send(result)
 })
 
+router.put('/virtual_contests/:virtualContestID', async (req: express.Request, res: express.Response) => {
+  let result = await server.instance.virtualContestController.updateVirtualContest(req,res)
+  res.send(result)
+})
+
 router.get('/virtual_contests/standings/:virtualContestID', async (req: express.Request, res: express.Response) => {
   let result = await server.instance.virtualContestController.getVirtualContestStandings(req,res)
   res.send(result)

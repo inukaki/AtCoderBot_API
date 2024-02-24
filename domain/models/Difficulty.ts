@@ -10,6 +10,10 @@ export const getColor = (rating: number): string => {
     return Color[index]
 }
 
+export const isColor = (color: string): Boolean => {
+    return Color.filter((str)=>{return str == color}).length != 0;
+}
+
 export const getRating = (color: string): number[] => {
     let index = Color.indexOf(color)
 
